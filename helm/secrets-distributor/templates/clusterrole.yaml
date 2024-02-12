@@ -28,7 +28,7 @@ rules:
   resources: ["clusterkopfpeerings"]
   verbs: ["list", "watch", "patch", "get"]
 
-# Patch for Services
-- apiGroups: [""]
-  resources: ["services", "services/status"]
-  verbs: ["get","watch","list","patch"]
+# Permissions for secretsdistributions
+- apiGroups: ["xlscsde.nhs.uk"]
+  resources: ["secretsdistributions", "secretsdistributions/status"]
+  verbs: ["get","watch","list","patch","create","update"]

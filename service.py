@@ -1,15 +1,45 @@
 import kopf
-import logging
 import time
 import asyncio
 import kubernetes
-import base64 
 import os
+from xlscsde.nhs.uk.secrets.distributor import SecretDistribution, SecretDistributionApi
 
-@kopf.on.create("Service")
-@kopf.on.update("Service")
-@kopf.on.resume("Service")
-def serviceUpdated(annotations, status, name, namespace, **_):
-    # your code here
-    print(f"{name} has been updated")
+group = "xlscsde.nhs.uk"
+kind = "SecretsDistribution"
+version = "v1"
+api_version = f"{group}/{version}"
+
+kube_config = {}
+
+kubernetes_service_host = os.environ.get("KUBERNETES_SERVICE_HOST")
+managed_by = os.environ.get("MANAGED_BY", "secrets-distributor")
+secrets_path = os.environ.get("SECRETS_PATH", "/mnt/secrets")
+
+if kubernetes_service_host:
+    kube_config = kubernetes.config.load_incluster_config()
+else:
+    kube_config = kubernetes.config.load_kube_config()
+
+api_client = kubernetes.client.ApiClient(kube_config)
+core_api = kubernetes.client.CoreV1Api(api_client)
+dynamic_client = kubernetes.dynamic.DynamicClient(api_client)
+custom_api = dynamic_client.resources.get(api_version = api_version, kind = kind)
+
+@kopf.on.create(group=group, kind=kind)
+@kopf.on.update(group=group, kind=kind)
+@kopf.on.resume(group=group, kind=kind)
+def secretUpdated(status, name, namespace, spec, **_):   
+    print(f"{name} on {namespace} has been updated")
     
+    distribution_api = SecretDistributionApi(core_api = core_api, custom_api = custom_api)
+    definition = SecretDistribution(
+        name = name, 
+        namespace = namespace, 
+        spec = spec,
+        status = status, 
+        managed_by = managed_by, 
+        secrets_path = secrets_path,
+        api = distribution_api
+        )
+    definition.updateTargetSecret()
