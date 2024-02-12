@@ -44,7 +44,7 @@ class SecretDistribution:
         data = {}
         for secret in self.spec.secrets:
             file_name = f"{self.secrets_path}/{secret.copy_from}"
-            if not os.path.isfile(file_name):
+            if not os.path.isfile(file_name) and not os.path.islink(file_name):
                 raise SecretNotFoundException(secret.copy_from)
 
             with open(file_name) as f:
@@ -62,6 +62,7 @@ class SecretDistribution:
                     "xlscsde.nhs.uk/managedBy" : self.managed_by
                 }
             ),
+            type=self.spec.type,
             data=self.getSecretData()
         )
 
@@ -143,6 +144,7 @@ class SecretDistributionSpec:
     def __init__(self, spec = None):
         if spec:
             self.name = spec.get("name")
+            self.type = spec.get("type", "Opaque")
             secrets = spec.get("secrets", [])
             formatted_secrets = []
             for secret in secrets:
@@ -150,4 +152,5 @@ class SecretDistributionSpec:
             self.secrets = formatted_secrets
         else:
             self.name = ""
+            self.type = "Opaque"
             self.secrets = []

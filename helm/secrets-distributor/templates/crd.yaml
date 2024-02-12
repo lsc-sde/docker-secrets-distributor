@@ -23,6 +23,10 @@ spec:
                 name:
                   type: string
                   description: The Name of the secret to generate
+                type:
+                  type: string
+                  description: The type of secret
+                  default: Opaque
                 secrets:
                   type: array
                   description: A list of secrets to create
