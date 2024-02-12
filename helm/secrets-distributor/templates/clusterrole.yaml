@@ -32,3 +32,7 @@ rules:
 - apiGroups: ["xlscsde.nhs.uk"]
   resources: ["secretsdistributions", "secretsdistributions/status"]
   verbs: ["get","watch","list","patch","create","update"]
+
+- apiGroups: [""]
+  resources: ["secrets", "secrets/status"]
+  verbs: ["get","watch","list","patch","create","update"]
