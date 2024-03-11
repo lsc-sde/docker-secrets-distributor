@@ -1,8 +1,0 @@
-replicas: 1
-image: lscsde/secrets-distributor:0.1.1
-nodeSelector: {}
-tolerations: []
-volumes: []
-volumeMounts: []
-env: []
-resources: {}
