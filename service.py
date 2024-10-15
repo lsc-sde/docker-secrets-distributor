@@ -26,6 +26,12 @@ core_api = kubernetes.client.CoreV1Api(api_client)
 dynamic_client = kubernetes.dynamic.DynamicClient(api_client)
 custom_api = dynamic_client.resources.get(api_version = api_version, kind = kind)
 
+
+@kopf.on.startup()
+def configure(settings: kopf.OperatorSettings, **_):
+    settings.watching.connect_timeout = 60
+    settings.watching.server_timeout = 60
+
 @kopf.on.create(group=group, kind=kind)
 @kopf.on.update(group=group, kind=kind)
 @kopf.on.resume(group=group, kind=kind)
