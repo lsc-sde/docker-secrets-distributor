@@ -170,3 +170,12 @@ volumes:
 ```
 
 This also gives us the option of exposing them as environmental variables instead of as a volume mount allowing us to account for a variety of other scenarios.
+
+## Environmental Variables
+
+The following environmental variables are exposed by the docker image:
+
+| Name | Purpose | Default |
+| --- | --- | --- | 
+| MANAGED_BY | Identifies the service that is currently managing the resources created & maintained by this service. This is to potentially allow multiple instances of the same service to run on the same server | secrets-distributor |
+| SECRETS_PATH | The location where the secrets are mounted | /mnt/secrets |
