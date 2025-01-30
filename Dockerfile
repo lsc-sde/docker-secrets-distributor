@@ -1,4 +1,4 @@
-FROM python:3.12.8-alpine3.21
+FROM python:alpine
 
 RUN apk add gcc
 RUN pip install --upgrade pip
@@ -12,5 +12,6 @@ CMD "/src/startup.sh"
 
 ENV MANAGED_BY="secrets-distributor"
 ENV SECRETS_PATH="/mnt/secrets"
+ENV USERNAME="secrets-distributor"
 
 USER 101
