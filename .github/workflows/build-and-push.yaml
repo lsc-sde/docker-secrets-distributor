@@ -12,4 +12,5 @@ jobs:
     with:
       imageName: secrets-distributor
       directory: docker/secrets-distributor
+      yamlPath: secrets_distributor
     secrets: inherit
