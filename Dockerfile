@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python:3.12.8-alpine3.21
 
 RUN apk add gcc
 RUN pip install --upgrade pip
